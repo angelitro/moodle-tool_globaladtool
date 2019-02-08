@@ -16,46 +16,32 @@
  
 /**
  * @package   tool_globaladtool
- * @copyright 2018, angelitr0 <angel@angelitro.com>
+ * @copyright 2018, angelitr0 <angelluisfraile@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['modulename'] = 'Globaladtool';
-$string['modificar'] = 'Modify ad';
 $string['left'] = 'Left';
 $string['right'] = 'Right';
 $string['up'] = 'Up';
 $string['botton'] = 'Botton';
 $string['block_positionh'] = 'Horizontal block position';
 $string['block_positionv'] = 'Vertical block position';
-$string['descblock_position'] = 'Position where the block appears';
+$string['descblock_position'] = 'Position into COURSE where the block appears:';
+$string['descblock_dashboard'] = 'Position into DASHBOARD where the block appears:';
+$string['dashb'] = 'Dashboard';
+$string['desc_dashboard'] = 'Select this checkbox to will show the Globalad Block into dashboard:';
 
-
-$string['pluginname'] = 'Globalad Tool';
-
-
-$string['globalad:addinstance'] = 'Add new Globalad block';
-$string['globalad:myaddinstance'] = 'Add new Globalad block my home';
+$string['pluginname'] = 'Globaladtool';
 
 $string['headerconfig'] = 'Settings';
 
-$string['descconfig'] = 'Create the ad that will be seen in the block';
-
-$string['titulo_grande'] = 'Globalad';
-
-
-$string['tit'] = 'Title';
-$string['desctit'] = "Title of the block that will be displayed in the block";
-$string['ad_text'] = "Ad";
-$string['descadtext'] = 'Ad that will be shown in all blocks';
 $string['categorias'] = 'Categories';
-$string['desccategorias'] = 'Select this categorie that show the ad';
-
-
-$string['globalad:viewglobalad'] = 'View Globalad block';
-$string['globalad:manageglobalad'] = 'Manage Globalad block';
+$string['desccategorias'] = 'Select the categorie that will show the Globalad Block:';
 
 $string['updateerror'] = 'Update error';
 $string['inserterror'] = 'Insert error';
 $string['noborra'] = 'Delete block error';
 
+$string['privacy:metadata'] = 'Globaladtool only save data site-level config.';
+$string['datosguardados'] = 'Changes saved.';

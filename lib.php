@@ -22,12 +22,10 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/adminlib.php');
-//require_once($CFG->libdir . '/blocklib.php');
 
-////////////////////////////////////////////////////
+define('PRIV', 1);
 
-
-function dondeCrear() {
+function dondeCrear($globalad) { // Devuelve un array con los cursos donde crear el bloque.
 
     global $DB, $COURSE, $PAGE;
     
@@ -88,9 +86,13 @@ function dondeCrear() {
                   
                             foreach ($bloques as $bloque) {
                       
-                                if ($bloque->title == "globalad") {
+                                if (isset($bloque->blockname)) {
 
-                                    $crear = false;
+                                    if ($bloque->blockname == "block_" . $globalad) {
+
+                                        $crear = false;
+
+                                    } // end if.
 
                                 } // end if.
                       
@@ -117,10 +119,7 @@ function dondeCrear() {
     return $crearCursos;
 }
 
-//////////////////////////////////
-
-
-function dondeBorrar() {
+function dondeBorrar($globalad) { // Devuelve un array con los cursos donde borrar el bloque.
 
     global $DB, $COURSE, $PAGE;
 
@@ -167,7 +166,7 @@ function dondeBorrar() {
 
                             if (isset($bloque->blockname)) {
 
-                                if ($bloque->blockname == "block_globalad") {
+                                if ($bloque->blockname == "block_" . $globalad) {
 
                                     $idinstanciabloque = $bloque->instance->id;
 
@@ -195,22 +194,13 @@ function dondeBorrar() {
 
 } // end function
 
-////////////////////////////////////////////
-
-function bloques () {
+function bloques ($globalad) {
 
     global $DB, $PAGE;
 
-    $contextActual = context_system::instance();
+    dondeBorrar($globalad);
 
-
-/////////////////////////////////////////////  Borra cursos  
-
-    dondeBorrar();
-
-///////////////////////////////////////////    Crea cursos
-
-    $cursosCrear = dondeCrear();
+    $cursosCrear = dondeCrear($globalad);
 
     $catConf = $DB->get_record('tool_globaladtool', array('id' => 1));
     $categoriasGuardadas = explode(",", $catConf->cate);
@@ -227,21 +217,18 @@ function bloques () {
 
     $posicionh = $catConf->posh;
     $posicionv = $catConf->posv;
-    $posh = null;
-    $posv = null;
 
     if (!$posicionh || $posicionh == 'izq') {
-        $posh = BLOCK_POS_LEFT;
+        $posicionh = BLOCK_POS_LEFT;
     } else {
-        $posh = BLOCK_POS_RIGHT;
+        $posicionh = BLOCK_POS_RIGHT;
     }
 
     if (!$posicionv || $posicionv == 'arr') {
-        $posv = -10;
+        $posicionv = -10;
     } else {
-        $posv = 10;
+        $posicionv = 10;
     }    
-
 
 
     foreach ($cursosCrear as $key => $cursoid) {
@@ -249,17 +236,148 @@ function bloques () {
         $coursecontext = context_course::instance($cursoid);
         $PAGE->set_context($coursecontext);
 
-        if ($PAGE->blocks->is_known_region($posh)) {
+        if ($PAGE->blocks->is_known_region($posicionh)) {
 
-            $PAGE->blocks->add_block('globalad', $posh, $posv, 0, 'course-view-*'); 
+            $PAGE->blocks->add_block($globalad, $posicionh, $posicionv, 0, 'course-view-*'); 
 
-        }
+        } // end if.
      
     } // en foreach.
 
-//////////////////// Vuelve al contexto
-
+    crearDash($globalad); // Crear o borrar en el Dashboard de todos los usuarios y en el default.
+    $message = get_string('datosguardados', 'tool_globaladtool');
     $url = new moodle_url('/admin/tool/globaladtool/index.php', array());
-    redirect($url);
+    redirect($url, $message);
 
 } // en function.
+
+function crearDash($globalad, $pagetype='my-index', $private=PRIV) { // Crear o borrar en el Dashboard de todos los usuarios y en el default.
+
+    global $DB, $PAGE;
+
+    $catConf = $DB->get_record('tool_globaladtool', array('id' => 1));
+
+    if ($catConf->dashb == 1) {
+
+        $posicionhd = $catConf->poshd;
+        $posicionvd = $catConf->posvd;
+
+        if (!$posicionhd || $posicionhd == 'izq') {
+            $posicionhd = BLOCK_POS_LEFT;
+        } else {
+            $posicionhd = BLOCK_POS_RIGHT;
+        }
+
+        if (!$posicionvd || $posicionvd == 'arr') {
+            $posicionvd = -10;
+        } else {
+            $posicionvd = 10;
+        }
+
+        $crear = true;
+        $PAGE = new \moodle_page();
+        $PAGE->set_url('/my/index.php', array());
+        $systemcontext = context_system::instance();
+        $PAGE->set_context($systemcontext);
+        $PAGE->set_pagelayout('mydashboard');
+        $systempage = $DB->get_record('my_pages', array('userid' => null, 'name' => '__default', 'private' => $private));
+        $PAGE->set_subpage($systempage->id);
+        $block_manager = $PAGE->blocks;
+        $block_manager->load_blocks(true);    
+
+        foreach ($block_manager->get_regions() as $region) {
+    
+            $bloques = $block_manager->get_blocks_for_region($region);
+                  
+                foreach ($bloques as $bloque) {
+                   
+                    if (isset($bloque->blockname)) {
+
+                        if ($bloque->blockname == "block_" . $globalad) {
+
+                            $crear = false;
+
+                        } // end if.
+
+                    } // end if.
+                      
+                } // en foreach.
+                      
+        } // en foreach.    
+
+        if ($crear) {
+
+            $PAGE->blocks->add_block($globalad, $posicionhd, $posicionvd, 0, $pagetype, $systempage->id);
+      
+            $sqltodas = "SELECT id, userid FROM {my_pages} where private = :priv and userid IS NOT NULL";
+            $paramtodas = array('priv' => $private);
+            $todas = $DB->get_recordset_sql($sqltodas, $paramtodas);
+
+            $sqlcon = "SELECT bi.subpagepattern
+            FROM {my_pages} p
+            JOIN {context} ctx ON ctx.instanceid = p.userid AND ctx.contextlevel = :usercontextlevel
+            JOIN {block_instances} bi ON bi.parentcontextid = ctx.id AND
+                bi.pagetypepattern = :pagetypepattern AND bi.blockname = :blockname WHERE p.private = :private AND p.userid IS NOT NULL";
+
+            $paramcon = array('private' => $private,
+            'usercontextlevel' => CONTEXT_USER,
+            'pagetypepattern' => $pagetype,
+            'blockname' => $globalad);
+
+            $con = $DB->get_fieldset_sql($sqlcon, $paramcon);
+
+            $instanceGlobalad = $DB->get_record('block_instances', array('parentcontextid' => $systemcontext->id,'pagetypepattern' => $pagetype,'subpagepattern' => $systempage->id,'blockname' => $globalad));
+               
+            foreach ($todas as $subpageptodas) {
+
+                $existe = null;
+
+                foreach ($con as $subpagepcon) {
+
+                    if ($subpageptodas->id == $subpagepcon) {
+
+                        $existe = true;                 
+
+                    } // end if.
+
+                } // end foreach.
+
+                if (!$existe) {
+
+                    $usercontext = context_user::instance($subpageptodas->userid);
+                    $originalid = $instanceGlobalad->id;
+                    unset($instanceGlobalad->id);
+                    $instanceGlobalad->parentcontextid = $usercontext->id;
+                    $instanceGlobalad->subpagepattern = $subpageptodas->id;
+                    $instanceGlobalad->timecreated = time();
+                    $instanceGlobalad->timemodified = $instanceGlobalad->timecreated;
+                    $instanceGlobalad->id = $DB->insert_record('block_instances', $instanceGlobalad);
+                    $blockcontext = context_block::instance($instanceGlobalad->id);  // Just creates the context record
+                    $block = block_instance($instanceGlobalad->blockname, $instanceGlobalad);
+
+                    if (!$block->instance_copy($originalid)) {
+                       debugging("Unable to copy block-specific data for original block instance: $originalid to new block instance: $$instanceGlobalad->id", DEBUG_DEVELOPER);
+
+                    } // end if.
+
+                } // end if.
+            
+            } // end foreach.
+
+            $todas->close();
+
+        } // end if.    
+
+    } else {
+
+        $blocks = $DB->get_records('block_instances', array('blockname' => $globalad, 'pagetypepattern' => $pagetype));
+
+        foreach ($blocks as $block) {
+
+            blocks_delete_instance($block);
+
+        } // end foreach.
+
+    } // end if.
+
+} // end function.

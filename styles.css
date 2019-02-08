@@ -1,0 +1,9 @@
+.globaladtool.lighter label {
+    font-weight: 400!important;   
+}
+.globaladtool.mform.fitem div.fitemtitle {
+    width: 330px;
+}
+.globaladtool select , .globaladtool input {
+    margin-left: 15px!important;
+}

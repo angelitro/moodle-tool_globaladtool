@@ -55,9 +55,9 @@ if ($settingsG->is_cancelled()) {
 
     if (!$datos) {
 
-        foreach ($fromform as $categorias => $value) {
+        foreach ($fromform as $categorias => $categ) {
 
-            if ($categorias!='posh' && $categorias!='posv' && $categorias!='id' && $categorias!='cate' && $categorias!='submitbutton') {
+            if ($categorias!='dashb' && $categorias!='posvd' && $categorias!='poshd' && $categorias!='posh' && $categorias!='posv' && $categorias!='id' && $categorias!='cate' && $categorias!='submitbutton' && $categorias!='') {
 
                 $fromform->cate .= ",".$categorias;
 
@@ -71,7 +71,7 @@ if ($settingsG->is_cancelled()) {
 
         } else {
 
-            bloques();
+            bloques('globalad');
 
         }
 
@@ -94,11 +94,16 @@ if ($settingsG->is_cancelled()) {
       
         foreach ($fromform as $categorias => $value) {
 
-            if ($categorias!='posh' && $categorias!='posv' && $categorias != 'id' && $categorias != 'cate' && $categorias != 'submitbutton') {
+            if ($categorias!='dashb' && $categorias!='posvd' && $categorias!='poshd' && $categorias!='posh' && $categorias!='posv' && $categorias!='id' && $categorias!='cate' && $categorias!='submitbutton' && $categorias!='') {
 
                 $fromform->cate .= $categorias.",";
             }
+            if (!isset($fromform->dashb)) {
+                $fromform->dashb = 0;
+            }
+
         }
+
 
         if (!$DB->update_record('tool_globaladtool', $fromform)) {
 
@@ -106,16 +111,16 @@ if ($settingsG->is_cancelled()) {
 
         } else {
 
-            bloques();
-
+            bloques('globalad');
+            
         }
         
     } // end if.
      
-
     $site = get_site();    
     echo $OUTPUT->header();
     $datos = $DB->get_record('tool_globaladtool', array('id' => 1));
+
     $categoriasGuardadas = explode("," , $datos->cate);
 
     foreach ($categoriasGuardadas as $categorias => $value) {
@@ -136,7 +141,7 @@ if ($settingsG->is_cancelled()) {
 
     $site = get_site();
     echo $OUTPUT->header();
-
+    
     if ($datos = $DB->get_record('tool_globaladtool', array('id' => 1))) {
 
         $categoriasGuardadas = explode("," , $datos->cate);
@@ -151,7 +156,7 @@ if ($settingsG->is_cancelled()) {
 
         }
     
-        $settingsG->set_data($datos);        
+        $settingsG->set_data($datos);
 
     }
 

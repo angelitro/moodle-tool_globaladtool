@@ -25,7 +25,7 @@ require_once("{$CFG->libdir}/formslib.php");
 
 class globaladtool_form extends moodleform {
  
-    public function definition() {
+    public function definition() { // Formulario configuración herramienta.
 
         global $DB, $CFG;
 
@@ -33,25 +33,40 @@ class globaladtool_form extends moodleform {
  
         $mform =& $this->_form;
         $mform->addElement('header','displayinfo', get_string('headerconfig', 'tool_globaladtool'));
+        $mform->addElement('html', '<div class="globaladtool mform fitem fitemtitle">');
+        $mform->addElement('static', 'description', get_string('desc_dashboard', 'tool_globaladtool'));
+        $mform->addElement('html', '<span class="globaladtool lighter">');
+        $mform->addElement('checkbox', 'dashb',  get_string('dashb', 'tool_globaladtool'));
+        $mform->addElement('html', '</span>');
+
+        $mform->addElement('static', 'description', get_string('descblock_dashboard', 'tool_globaladtool'));
+
         $opcionesh = array (
-
-	       	'izq' => get_string('left', 'tool_globaladtool'),
-        	'der' => get_string('right', 'tool_globaladtool')
-
+            'izq' => get_string('left', 'tool_globaladtool'),
+            'der' => get_string('right', 'tool_globaladtool')
         );
 
-        $mform->addElement('static', 'description', get_string('descblock_position', 'tool_globaladtool'));
-        $mform->addElement('select', 'posh', get_string('block_positionh', 'tool_globaladtool'), $opcionesh);
-                
         $opcionesv = array (
-
-	       	'arr' => get_string('up', 'tool_globaladtool'),
-        	'aba' => get_string('botton', 'tool_globaladtool')
-
+            'arr' => get_string('up', 'tool_globaladtool'),
+            'aba' => get_string('botton', 'tool_globaladtool')
         );
 
+        $mform->disabledIf('poshd', 'dashb');
+        $mform->disabledIf('posvd', 'dashb');
+
+        $mform->addElement('html', '<div class="globaladtool lighter">');
+        $mform->addElement('select', 'poshd', get_string('block_positionh', 'tool_globaladtool'), $opcionesh);
+        $mform->addElement('select', 'posvd', get_string('block_positionv', 'tool_globaladtool'), $opcionesv);
+        $mform->addElement('html', '</div>');
+
+        $mform->addElement('html', '<hr>');      
+        
+        $mform->addElement('static', 'description', get_string('descblock_position', 'tool_globaladtool'));
+
+        $mform->addElement('html', '<div class="globaladtool lighter">');
+        $mform->addElement('select', 'posh', get_string('block_positionh', 'tool_globaladtool'), $opcionesh);              
         $mform->addElement('select', 'posv', get_string('block_positionv', 'tool_globaladtool'), $opcionesv);
-        $mform->addElement('html', '<hr>');
+        $mform->addElement('html', '</div>');
         $mform->addElement('static', 'description', get_string('desccategorias', 'tool_globaladtool'));
         
         if ($versionM < 2018120300) {
@@ -64,7 +79,9 @@ class globaladtool_form extends moodleform {
         }
 
 		$numb = 0;
-		$categories = $DB->get_records('course_categories', array());        
+		$categories = $DB->get_records('course_categories', array());
+
+        $mform->addElement('html', '<div class="globaladtool lighter">');        
 
         foreach ($categorias as $categoria) {
 
@@ -80,15 +97,15 @@ class globaladtool_form extends moodleform {
 
                     $catSin = str_replace(' ', '', $categorie->name);
 
-                        if($catSin == $categoriaSin ) {
+                    if($catSin == $categoriaSin ) {
 
-                            if ($categorie->coursecount > 0) {
+                        if ($categorie->coursecount > 0) {
 
-                				$mform->addElement('checkbox', $categoriaSin,  $categoria . " (" . $categorie->coursecount . ")");  
+                	        $mform->addElement('checkbox', $categoriaSin,  $categoria . " (" . $categorie->coursecount . ")");  
 
-                			}
+                        }
 
-                		}
+                    }
 
                 }
                   
@@ -98,22 +115,22 @@ class globaladtool_form extends moodleform {
 
                     $catSin = str_replace(' ', '', $categorie->name);
 
-                        if($catSin == $categoriaArrSin[$numb - 1] ) {
+                    if($catSin == $categoriaArrSin[$numb - 1] ) {
 
-                            if ($categorie->coursecount > 0) {
+                        if ($categorie->coursecount > 0) {
 
-                                $mform->addElement('checkbox', $categoriaArrSin[$numb - 1], $categoria . " (" . $categorie->coursecount . ")");  
-
-                            }
-
+                            $mform->addElement('checkbox', $categoriaArrSin[$numb - 1], $categoria . " (" . $categorie->coursecount . ")");  
                         }
+
+                    }
 
                 }                	
 
             }           
                                 
         } 
-  	    	
+  	    $mform->addElement('html', '</div>');
+        $mform->addElement('html', '</div>');	
         $this->add_action_buttons();
 		
         $mform->addElement('hidden','id','0');

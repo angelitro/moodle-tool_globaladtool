@@ -21,39 +21,27 @@
  */
 
 $string['modulename'] = 'Globaladtool';
-$string['modificar'] = 'Modificar anuncio';
 $string['left'] = 'Izquierda';
 $string['right'] = 'Derecha';
 $string['up'] = 'Arriba';
 $string['botton'] = 'Abajo';
 $string['block_positionh'] = 'Posici&oacute;n del bloque horizontal';
 $string['block_positionv'] = 'Posici&oacute;n del bloque vertical';
-$string['descblock_position'] = 'Posición donde aparecerá el bloque';
+$string['descblock_position'] = 'Posición del CURSO donde aparecerá el bloque:';
+$string['descblock_dashboard'] = 'Posición del ÁREA PERSONAL donde aparecerá el bloque:';
+$string['dashb'] = '&Aacute;rea personal';
+$string['desc_dashboard'] = 'Selecciona esta casilla para mostrar el bloque Globalad en el %Aacute;rea personal:';
 
-$string['pluginname'] = 'Herramienta Globalad';
-
-
-$string['globalad:addinstance'] = 'Añadir nuevo bloque Globalad';
-$string['globalad:myaddinstance'] = 'Añadir nuevo bloque Globalad en mi página';
+$string['pluginname'] = 'Globaladtool';
 
 $string['headerconfig'] = 'Ajustes Generales';
 
-$string['descconfig'] = 'Crea el anuncio que se verá en el bloque';
-
-$string['titulo_grande'] = 'Globalad';
-
-
-$string['tit'] = 'T&iacute;tulo';
-$string['desctit'] = "T&iacute;tulo del bloque que se monstrará en el bloque";
-$string['ad_text'] = "Anuncio";
-$string['descadtext'] = 'Anuncio que se mostrará en todos los bloques';
 $string['categorias'] = 'Categorias';
-$string['desccategorias'] = 'Selecciona esta categoria que mostraran el anuncio';
-
-
-$string['globalad:viewglobalad'] = 'Ver bloque Globalad';
-$string['globalad:manageglobalad'] = 'Administrar bloque Globalad';
+$string['desccategorias'] = 'Selecciona la categor&iacute;a que mostrar&aacute; anuncio';
 
 $string['updateerror'] = 'Error al actualizar';
 $string['inserterror'] = 'Error al guardar';
 $string['noborra'] = 'Error al borrar bloque';
+
+$string['privacy:metadata'] = 'Globaladtool solo guarda configuración a nivel de sitio.';
+$string['datosguardados'] = 'Cambios guardados.';

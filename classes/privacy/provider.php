@@ -15,17 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * @package   tool_globaladtool
- * @copyright 2018, Angel Fraile <angelluisfrailel@gmail.com>
+ * @copyright 2018, angelitr0 <angelluisfraile@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+class provider implements
+    // This plugin does not store any personal user data.
+    \core_privacy\local\metadata\null_provider {
  
-defined('MOODLE_INTERNAL') || die();
- 
-$plugin->version = 2018102905;
-$plugin->requires = 2018051700; // require Moodle version (3.5).
-$plugin->component = 'tool_globaladtool';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->release = 'v1.0';
-$plugin->dependencies = array(
-    'block_globalad' => 2019011706,   // The block globalad must be present (2019011706 or higher).
- );
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}
