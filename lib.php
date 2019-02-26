@@ -25,7 +25,7 @@ require_once($CFG->libdir . '/adminlib.php');
 
 define('PRIV', 1);
 
-function dondeCrear($globalad) { // Devuelve un array con los cursos donde crear el bloque.
+function wherecreate($globalad) { // Returns an array with the courses where to create the block.
 
     global $DB, $COURSE, $PAGE;
     
@@ -34,13 +34,13 @@ function dondeCrear($globalad) { // Devuelve un array con los cursos donde crear
             
     $courses = get_courses();
 
-    $catConf = $DB->get_record('tool_globaladtool', array('id' => 1));
-    $categoriasGuardadas = explode(",", $catConf->cate);
+    $catconf = $DB->get_record('tool_globaladtool', array('id' => 1));
+    $categoriessaved = explode(",", $catconf->cate);
 
-    foreach ($categoriasGuardadas as $categorias => $value) {
+    foreach ($categoriessaved as $categorias => $value) {
         if($value != ""){
 
-          $catConf->$value = 1;
+          $catconf->$value = 1;
 
         }  
 
@@ -48,26 +48,26 @@ function dondeCrear($globalad) { // Devuelve un array con los cursos donde crear
 
     $categorias = $DB->get_records('course_categories',array());
 
-    $crearCursos = array();
+    $createcourses = array();
 
-    foreach ($catConf as $nom => $act) {
+    foreach ($catconf as $nom => $act) {
 
         if($act) {
 
             foreach ($categorias as $cat) {
 
                 $categoria = str_replace(' ', '', $cat->name);
-                $idCategoria = $cat->id;
+                $idcategorie = $cat->id;
                 $table = 'course';
-                $select = 'category = ?'; //is put into the where clause
+                $select = 'category = ?';
               
                 if ($nom == $categoria){
 
-                    $result = $DB->get_records_select_menu($table, $select, array($idCategoria));          
+                    $result = $DB->get_records_select_menu($table, $select, array($idcategorie));          
 
                     foreach ($result as $idcurso => $categ) {
 
-                        $crear = true;
+                        $create = true;
 
                         $coursecontext = context_course::instance($idcurso);
 
@@ -90,7 +90,7 @@ function dondeCrear($globalad) { // Devuelve un array con los cursos donde crear
 
                                     if ($bloque->blockname == "block_" . $globalad) {
 
-                                        $crear = false;
+                                        $create = false;
 
                                     } // end if.
 
@@ -100,9 +100,9 @@ function dondeCrear($globalad) { // Devuelve un array con los cursos donde crear
                       
                         } // en foreach.
                   
-                        if ($crear) {
+                        if ($create) {
 
-                            array_push($crearCursos, $idcurso);
+                            array_push($createcourses, $idcurso);
 
                         } // end if.
 
@@ -116,10 +116,10 @@ function dondeCrear($globalad) { // Devuelve un array con los cursos donde crear
          
     } // end foreach.
 
-    return $crearCursos;
+    return $createcourses;
 }
 
-function dondeBorrar($globalad) { // Devuelve un array con los cursos donde borrar el bloque.
+function wheredelete($globalad) { // Returns an array with the courses where to clear the block.
 
     global $DB, $COURSE, $PAGE;
 
@@ -128,23 +128,23 @@ function dondeBorrar($globalad) { // Devuelve un array con los cursos donde borr
 
     $courses = get_courses();
 
-    $catConf = $DB->get_record('tool_globaladtool', array('id' => 1));
-    $categoriasGuardadas = explode(",", $catConf->cate);
+    $catconf = $DB->get_record('tool_globaladtool', array('id' => 1));
+    $categoriessaved = explode(",", $catconf->cate);
     $categorias = $DB->get_records('course_categories',array());
-    $borrarCursos = array();    
+    $coursesdelete = array();    
 
     foreach ($categorias as $cat) {
 
         $categoria = str_replace(' ', '', $cat->name);
-        $idCategoria = $cat->id;
+        $idcategorie = $cat->id;
         $table = 'course';
-        $select = 'category = ?'; //is put into the where clause
+        $select = 'category = ?';
 
-        foreach ($categoriasGuardadas as $key => $nom) {
+        foreach ($categoriessaved as $key => $nom) {
                             
             if ($categoria != $nom) {
 
-                $result = $DB->get_records_select_menu($table, $select, array($idCategoria));                
+                $result = $DB->get_records_select_menu($table, $select, array($idcategorie));                
 
                 foreach ($result as $idcurso => $categ) {
 
@@ -190,33 +190,33 @@ function dondeBorrar($globalad) { // Devuelve un array con los cursos donde borr
 
     } // end foreach.         
       
-    return $borrarCursos;
+    return $coursesdelete;
 
 } // end function
 
-function bloques ($globalad) {
+function blocks ($globalad) {
 
     global $DB, $PAGE;
 
-    dondeBorrar($globalad);
+    wheredelete($globalad);
 
-    $cursosCrear = dondeCrear($globalad);
+    $coursescreate = wherecreate($globalad);
 
-    $catConf = $DB->get_record('tool_globaladtool', array('id' => 1));
-    $categoriasGuardadas = explode(",", $catConf->cate);
+    $catconf = $DB->get_record('tool_globaladtool', array('id' => 1));
+    $categoriessaved = explode(",", $catconf->cate);
 
-    foreach ($categoriasGuardadas as $categorias => $value) {
+    foreach ($categoriessaved as $categorias => $value) {
 
         if ($value != "") {
 
-          $catConf->$value = 1;
+          $catconf->$value = 1;
 
         }  
 
     }
 
-    $posicionh = $catConf->posh;
-    $posicionv = $catConf->posv;
+    $posicionh = $catconf->posh;
+    $posicionv = $catconf->posv;
 
     if (!$posicionh || $posicionh == 'izq') {
         $posicionh = BLOCK_POS_LEFT;
@@ -231,7 +231,7 @@ function bloques ($globalad) {
     }    
 
 
-    foreach ($cursosCrear as $key => $cursoid) {
+    foreach ($coursescreate as $key => $cursoid) {
 
         $coursecontext = context_course::instance($cursoid);
         $PAGE->set_context($coursecontext);
@@ -244,23 +244,23 @@ function bloques ($globalad) {
      
     } // en foreach.
 
-    crearDash($globalad); // Crear o borrar en el Dashboard de todos los usuarios y en el default.
-    $message = get_string('datosguardados', 'tool_globaladtool');
+    createdash($globalad); // Create or delete in the Dashboard of all users and default Dashboard.
+    $message = get_string('changessaved', 'tool_globaladtool');
     $url = new moodle_url('/admin/tool/globaladtool/index.php', array());
     redirect($url, $message);
 
 } // en function.
 
-function crearDash($globalad, $pagetype='my-index', $private=PRIV) { // Crear o borrar en el Dashboard de todos los usuarios y en el default.
+function createdash($globalad, $pagetype='my-index', $private=PRIV) { // Create or delete in the Dashboard of all users and default Dashboard.
 
     global $DB, $PAGE;
 
-    $catConf = $DB->get_record('tool_globaladtool', array('id' => 1));
+    $catconf = $DB->get_record('tool_globaladtool', array('id' => 1));
 
-    if ($catConf->dashb == 1) {
+    if ($catconf->dashb == 1) {
 
-        $posicionhd = $catConf->poshd;
-        $posicionvd = $catConf->posvd;
+        $posicionhd = $catconf->poshd;
+        $posicionvd = $catconf->posvd;
 
         if (!$posicionhd || $posicionhd == 'izq') {
             $posicionhd = BLOCK_POS_LEFT;
@@ -274,7 +274,7 @@ function crearDash($globalad, $pagetype='my-index', $private=PRIV) { // Crear o 
             $posicionvd = 10;
         }
 
-        $crear = true;
+        $create = true;
         $PAGE = new \moodle_page();
         $PAGE->set_url('/my/index.php', array());
         $systemcontext = context_system::instance();
@@ -295,7 +295,7 @@ function crearDash($globalad, $pagetype='my-index', $private=PRIV) { // Crear o 
 
                         if ($bloque->blockname == "block_" . $globalad) {
 
-                            $crear = false;
+                            $create = false;
 
                         } // end if.
 
@@ -305,13 +305,13 @@ function crearDash($globalad, $pagetype='my-index', $private=PRIV) { // Crear o 
                       
         } // en foreach.    
 
-        if ($crear) {
+        if ($create) {
 
             $PAGE->blocks->add_block($globalad, $posicionhd, $posicionvd, 0, $pagetype, $systempage->id);
       
-            $sqltodas = "SELECT id, userid FROM {my_pages} where private = :priv and userid IS NOT NULL";
-            $paramtodas = array('priv' => $private);
-            $todas = $DB->get_recordset_sql($sqltodas, $paramtodas);
+            $sqlall = "SELECT id, userid FROM {my_pages} where private = :priv and userid IS NOT NULL";
+            $paramall = array('priv' => $private);
+            $all = $DB->get_recordset_sql($sqlall, $paramall);
 
             $sqlcon = "SELECT bi.subpagepattern
             FROM {my_pages} p
@@ -326,37 +326,37 @@ function crearDash($globalad, $pagetype='my-index', $private=PRIV) { // Crear o 
 
             $con = $DB->get_fieldset_sql($sqlcon, $paramcon);
 
-            $instanceGlobalad = $DB->get_record('block_instances', array('parentcontextid' => $systemcontext->id,'pagetypepattern' => $pagetype,'subpagepattern' => $systempage->id,'blockname' => $globalad));
+            $instanceglobalad = $DB->get_record('block_instances', array('parentcontextid' => $systemcontext->id,'pagetypepattern' => $pagetype,'subpagepattern' => $systempage->id,'blockname' => $globalad));
                
-            foreach ($todas as $subpageptodas) {
+            foreach ($all as $subpagepall) {
 
-                $existe = null;
+                $exist = null;
 
                 foreach ($con as $subpagepcon) {
 
-                    if ($subpageptodas->id == $subpagepcon) {
+                    if ($subpagepall->id == $subpagepcon) {
 
-                        $existe = true;                 
+                        $exist = true;                 
 
                     } // end if.
 
                 } // end foreach.
 
-                if (!$existe) {
+                if (!$exist) {
 
-                    $usercontext = context_user::instance($subpageptodas->userid);
-                    $originalid = $instanceGlobalad->id;
-                    unset($instanceGlobalad->id);
-                    $instanceGlobalad->parentcontextid = $usercontext->id;
-                    $instanceGlobalad->subpagepattern = $subpageptodas->id;
-                    $instanceGlobalad->timecreated = time();
-                    $instanceGlobalad->timemodified = $instanceGlobalad->timecreated;
-                    $instanceGlobalad->id = $DB->insert_record('block_instances', $instanceGlobalad);
-                    $blockcontext = context_block::instance($instanceGlobalad->id);  // Just creates the context record
-                    $block = block_instance($instanceGlobalad->blockname, $instanceGlobalad);
+                    $usercontext = context_user::instance($subpagepall->userid);
+                    $originalid = $instanceglobalad->id;
+                    unset($instanceglobalad->id);
+                    $instanceglobalad->parentcontextid = $usercontext->id;
+                    $instanceglobalad->subpagepattern = $subpagepall->id;
+                    $instanceglobalad->timecreated = time();
+                    $instanceglobalad->timemodified = $instanceglobalad->timecreated;
+                    $instanceglobalad->id = $DB->insert_record('block_instances', $instanceglobalad);
+                    $blockcontext = context_block::instance($instanceglobalad->id);  // Just creates the context record
+                    $block = block_instance($instanceglobalad->blockname, $instanceglobalad);
 
                     if (!$block->instance_copy($originalid)) {
-                       debugging("Unable to copy block-specific data for original block instance: $originalid to new block instance: $$instanceGlobalad->id", DEBUG_DEVELOPER);
+                       debugging("Unable to copy block-specific data for original block instance: $originalid to new block instance: $instanceglobalad->id", DEBUG_DEVELOPER);
 
                     } // end if.
 
@@ -364,7 +364,7 @@ function crearDash($globalad, $pagetype='my-index', $private=PRIV) { // Crear o 
             
             } // end foreach.
 
-            $todas->close();
+            $all->close();
 
         } // end if.    
 

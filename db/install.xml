@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="tool_globaladtool" COMMENT="Default comment for tool_globaladtool, please edit me">
+    <TABLE NAME="tool_globaladtool" COMMENT="All categories they are saved in the field cate in only one row. tool_globaladtool only use one row.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="posh" TYPE="char" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>

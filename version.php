@@ -21,11 +21,11 @@
  
 defined('MOODLE_INTERNAL') || die();
  
-$plugin->version = 2018102905;
+$plugin->version = 2018102906;
 $plugin->requires = 2018051700; // require Moodle version (3.5).
 $plugin->component = 'tool_globaladtool';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = 'v1.0';
+$plugin->release = 'v1.1';
 $plugin->dependencies = array(
     'block_globalad' => 2019011706,   // The block globalad must be present (2019011706 or higher).
  );

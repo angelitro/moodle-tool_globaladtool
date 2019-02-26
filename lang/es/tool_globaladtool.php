@@ -41,7 +41,6 @@ $string['desccategorias'] = 'Selecciona la categor&iacute;a que mostrar&aacute; 
 
 $string['updateerror'] = 'Error al actualizar';
 $string['inserterror'] = 'Error al guardar';
-$string['noborra'] = 'Error al borrar bloque';
 
 $string['privacy:metadata'] = 'Globaladtool solo guarda configuración a nivel de sitio.';
-$string['datosguardados'] = 'Cambios guardados.';
+$string['changessaved'] = 'Cambios guardados.';

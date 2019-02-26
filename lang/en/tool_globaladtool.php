@@ -41,7 +41,6 @@ $string['desccategorias'] = 'Select the categorie that will show the Globalad Bl
 
 $string['updateerror'] = 'Update error';
 $string['inserterror'] = 'Insert error';
-$string['noborra'] = 'Delete block error';
 
 $string['privacy:metadata'] = 'Globaladtool only save data site-level config.';
-$string['datosguardados'] = 'Changes saved.';
+$string['changessaved'] = 'Changes saved.';

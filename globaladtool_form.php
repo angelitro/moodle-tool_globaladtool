@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * @package   block_globaladtool
+ * @package   tool_globaladtool
  * @copyright 2018, angelitr0 <angelluisfraile@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,11 +25,11 @@ require_once("{$CFG->libdir}/formslib.php");
 
 class globaladtool_form extends moodleform {
  
-    public function definition() { // Formulario configuración herramienta.
+    public function definition() { // Form configuration tool.
 
         global $DB, $CFG;
 
-        $versionM = $CFG->version;
+        $versionm = $CFG->version;
  
         $mform =& $this->_form;
         $mform->addElement('header','displayinfo', get_string('headerconfig', 'tool_globaladtool'));
@@ -69,7 +69,7 @@ class globaladtool_form extends moodleform {
         $mform->addElement('html', '</div>');
         $mform->addElement('static', 'description', get_string('desccategorias', 'tool_globaladtool'));
         
-        if ($versionM < 2018120300) {
+        if ($versionm < 2018120300) {
 
             $categorias = coursecat::make_categories_list();
 
@@ -85,23 +85,23 @@ class globaladtool_form extends moodleform {
 
         foreach ($categorias as $categoria) {
 
-            $categoriaSin = str_replace(' ', '', $categoria);
+            $categoriasin = str_replace(' ', '', $categoria);
 
-            $categoriaArrSin = explode("/", $categoriaSin);
+            $categoriaarrsin = explode("/", $categoriasin);
 
-            $numb = count($categoriaArrSin);
+            $numb = count($categoriaarrsin);
 
             if ($numb == 1) {
 
                 foreach ($categories as $categorie) {
 
-                    $catSin = str_replace(' ', '', $categorie->name);
+                    $catsin = str_replace(' ', '', $categorie->name);
 
-                    if($catSin == $categoriaSin ) {
+                    if($catsin == $categoriasin ) {
 
                         if ($categorie->coursecount > 0) {
 
-                	        $mform->addElement('checkbox', $categoriaSin,  $categoria . " (" . $categorie->coursecount . ")");  
+                	        $mform->addElement('checkbox', $categoriasin,  $categoria . " (" . $categorie->coursecount . ")");  
 
                         }
 
@@ -113,13 +113,13 @@ class globaladtool_form extends moodleform {
 
                 foreach ($categories as $categorie) {
 
-                    $catSin = str_replace(' ', '', $categorie->name);
+                    $catsin = str_replace(' ', '', $categorie->name);
 
-                    if($catSin == $categoriaArrSin[$numb - 1] ) {
+                    if($catsin == $categoriaarrsin[$numb - 1] ) {
 
                         if ($categorie->coursecount > 0) {
 
-                            $mform->addElement('checkbox', $categoriaArrSin[$numb - 1], $categoria . " (" . $categorie->coursecount . ")");  
+                            $mform->addElement('checkbox', $categoriaarrsin[$numb - 1], $categoria . " (" . $categorie->coursecount . ")");  
                         }
 
                     }
@@ -137,5 +137,9 @@ class globaladtool_form extends moodleform {
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'cate');
         $mform->setType('cate', PARAM_TEXT);
+        
+        $mform->addElement('hidden', 'sesskey', null);
+        $mform->setType('sesskey', PARAM_RAW);
+        $mform->setDefault('sesskey', sesskey());
     }
 }

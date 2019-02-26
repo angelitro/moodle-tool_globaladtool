@@ -40,20 +40,20 @@ $PAGE->set_context($context);
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title($SITE->fullname. ': ' . $title);
 
-$settingsG = new globaladtool_form();
+$settingsg = new globaladtool_form();
 
-if ($settingsG->is_cancelled()) {
+if ($settingsg->is_cancelled()) {
 
     $courseurl = new moodle_url('/admin/category.php', array('category' => 'appearance'));
     redirect($courseurl);
 
-} else if ($fromform = $settingsG->get_data()) {
+} else if ($fromform = $settingsg->get_data() and $settingsg = data_submitted() and confirm_sesskey()) {
 
-    $datos = $DB->get_record('tool_globaladtool', array('id' => 1));
+    $data = $DB->get_record('tool_globaladtool', array('id' => 1));
 
     $fromform->cate = "";
 
-    if (!$datos) {
+    if (!$data) {
 
         foreach ($fromform as $categorias => $categ) {
 
@@ -71,17 +71,17 @@ if ($settingsG->is_cancelled()) {
 
         } else {
 
-            bloques('globalad');
+            blocks('globalad');
 
         }
 
                 
     } else {
 
-        $datos->cate = "";
-        $categoriasGuardadas = explode(",", $datos->cate);
+        $data->cate = "";
+        $categoriessaved = explode(",", $data->cate);
 
-        foreach ($categoriasGuardadas as $categorias => $value) {
+        foreach ($categoriessaved as $categorias => $value) {
 
             if ($value != "") {
 
@@ -111,7 +111,7 @@ if ($settingsG->is_cancelled()) {
 
         } else {
 
-            bloques('globalad');
+            blocks('globalad');
             
         }
         
@@ -119,11 +119,11 @@ if ($settingsG->is_cancelled()) {
      
     $site = get_site();    
     echo $OUTPUT->header();
-    $datos = $DB->get_record('tool_globaladtool', array('id' => 1));
+    $data = $DB->get_record('tool_globaladtool', array('id' => 1));
 
-    $categoriasGuardadas = explode("," , $datos->cate);
+    $categoriessaved = explode("," , $data->cate);
 
-    foreach ($categoriasGuardadas as $categorias => $value) {
+    foreach ($categoriessaved as $categorias => $value) {
 
         if ($value != "") {
 
@@ -133,8 +133,8 @@ if ($settingsG->is_cancelled()) {
         
     }
 
-    $settingsG->set_data($fromform);
-    $settingsG->display();
+    $settingsg->set_data($fromform);
+    $settingsg->display();
     echo $OUTPUT->footer();     
 
 } else {
@@ -142,25 +142,25 @@ if ($settingsG->is_cancelled()) {
     $site = get_site();
     echo $OUTPUT->header();
     
-    if ($datos = $DB->get_record('tool_globaladtool', array('id' => 1))) {
+    if ($data = $DB->get_record('tool_globaladtool', array('id' => 1))) {
 
-        $categoriasGuardadas = explode("," , $datos->cate);
+        $categoriessaved = explode("," , $data->cate);
 
-        foreach ($categoriasGuardadas as $categorias => $value) {
+        foreach ($categoriessaved as $categorias => $value) {
 
             if ($value != "") {
 
-                $datos->$value = 1;
+                $data->$value = 1;
 
             }
 
         }
     
-        $settingsG->set_data($datos);
+        $settingsg->set_data($data);
 
     }
 
-    $settingsG->display();
+    $settingsg->display();
     echo $OUTPUT->footer();
 
 } // end if.
