@@ -71,7 +71,7 @@ if ($settingsg->is_cancelled()) {
 
         } else {
 
-            blocks('globalad');
+            tool_globaladtool_blocks('globalad');
 
         }
 
@@ -111,7 +111,7 @@ if ($settingsg->is_cancelled()) {
 
         } else {
 
-            blocks('globalad');
+            tool_globaladtool_blocks('globalad');
             
         }
         

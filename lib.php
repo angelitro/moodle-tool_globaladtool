@@ -25,7 +25,7 @@ require_once($CFG->libdir . '/adminlib.php');
 
 define('PRIV', 1);
 
-function wherecreate($globalad) { // Returns an array with the courses where to create the block.
+function tool_globaladtool_wherecreate($globalad) { // Returns an array with the courses where to create the block.
 
     global $DB, $COURSE, $PAGE;
     
@@ -119,7 +119,7 @@ function wherecreate($globalad) { // Returns an array with the courses where to 
     return $createcourses;
 }
 
-function wheredelete($globalad) { // Returns an array with the courses where to clear the block.
+function tool_globaladtool_wheredelete($globalad) { // Returns an array with the courses where to clear the block.
 
     global $DB, $COURSE, $PAGE;
 
@@ -194,13 +194,13 @@ function wheredelete($globalad) { // Returns an array with the courses where to 
 
 } // end function
 
-function blocks ($globalad) {
+function tool_globaladtool_blocks ($globalad) {
 
     global $DB, $PAGE;
 
-    wheredelete($globalad);
+    tool_globaladtool_wheredelete($globalad);
 
-    $coursescreate = wherecreate($globalad);
+    $coursescreate = tool_globaladtool_wherecreate($globalad);
 
     $catconf = $DB->get_record('tool_globaladtool', array('id' => 1));
     $categoriessaved = explode(",", $catconf->cate);
@@ -244,14 +244,14 @@ function blocks ($globalad) {
      
     } // en foreach.
 
-    createdash($globalad); // Create or delete in the Dashboard of all users and default Dashboard.
+    tool_globaladtool_createdash($globalad); // Create or delete in the Dashboard of all users and default Dashboard.
     $message = get_string('changessaved', 'tool_globaladtool');
     $url = new moodle_url('/admin/tool/globaladtool/index.php', array());
     redirect($url, $message);
 
 } // en function.
 
-function createdash($globalad, $pagetype='my-index', $private=PRIV) { // Create or delete in the Dashboard of all users and default Dashboard.
+function tool_globaladtool_createdash($globalad, $pagetype='my-index', $private=PRIV) { // Create or delete in the Dashboard of all users and default Dashboard.
 
     global $DB, $PAGE;
 
