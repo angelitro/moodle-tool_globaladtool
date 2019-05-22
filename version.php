@@ -21,7 +21,7 @@
  
 defined('MOODLE_INTERNAL') || die();
  
-$plugin->version = 2018102907;
+$plugin->version = 2018102908;
 $plugin->requires = 2018051700; // require Moodle version (3.5).
 $plugin->component = 'tool_globaladtool';
 $plugin->maturity = MATURITY_STABLE;
